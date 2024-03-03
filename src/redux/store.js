@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -8,28 +8,29 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import { todosReducer } from './todosSlice'
-
-
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import { todosReducer } from './todosSlice';
+import { filterReduser } from './filterSlice';
 
 const persistConfig = {
-    key: 'todo',
-    storage,
-}
+  key: 'todo',
+  storage,
+};
 
-const persistedReducer = persistReducer(persistConfig, todosReducer)
+const persistedReducer = persistReducer(persistConfig, todosReducer);
 
 export const store = configureStore({
-  reducer: {todos: persistedReducer },
-  middleware: (getDefaultMiddleware) =>
+  reducer: {
+    todos: persistedReducer,
+    filter: filterReduser,
+  },
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
 export const persistor = persistStore(store);
-
